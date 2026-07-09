@@ -3,210 +3,327 @@ const doctors = [
     id: "valeria",
     name: "Dra. Valeria Montes",
     initials: "VM",
-    specialty: "Diagnostico integral y prevencion",
-    availability: "Lun, mie, vie",
-    summary: "Ideal para primera visita, limpieza, sensibilidad, revision general y planes preventivos.",
-    tags: ["revision", "limpieza", "sensibilidad", "rutina"]
+    role: "Diagnóstico integral y prevención",
+    bio: "Primera visita, limpieza, sensibilidad y planes preventivos con una explicación clara.",
+    keywords: ["revision", "revisión", "limpieza", "sensibilidad", "sensible", "rutina", "chequeo", "prevencion", "prevención"]
   },
   {
     id: "ines",
-    name: "Dra. Ines Aranda",
+    name: "Dra. Inés Aranda",
     initials: "IA",
-    specialty: "Estetica dental y diseno de sonrisa",
-    availability: "Mar, jue, sab",
-    summary: "Para blanqueamiento, resinas, carillas, cambios de color o armonia visible de la sonrisa.",
-    tags: ["estetica", "blanqueamiento", "carillas", "resinas"]
+    role: "Estética dental",
+    bio: "Blanqueamiento, resinas, carillas y armonía de sonrisa con resultado natural.",
+    keywords: ["blanque", "carilla", "resina", "estetica", "estética", "sonrisa", "mancha", "color", "amarillo"]
   },
   {
     id: "camila",
     name: "Dra. Camila Rohe",
     initials: "CR",
-    specialty: "Rehabilitacion y restauraciones",
-    availability: "Lun a jue",
-    summary: "Para dolor al morder, coronas, fracturas, restauraciones profundas o piezas desgastadas.",
-    tags: ["dolor", "fractura", "corona", "rehabilitacion"]
+    role: "Rehabilitación y restauraciones",
+    bio: "Dolor al morder, piezas fracturadas, coronas y restauraciones profundas.",
+    keywords: ["dolor", "duele", "fractura", "roto", "corona", "morder", "caries", "urgencia", "conducto"]
   },
   {
     id: "sofia",
-    name: "Dra. Sofia Neri",
+    name: "Dra. Sofía Neri",
     initials: "SN",
-    specialty: "Odontologia familiar y cuidado suave",
-    availability: "Mie a sab",
-    summary: "Para ninos, adolescentes, ansiedad dental, seguimiento familiar y consultas de baja urgencia.",
-    tags: ["familia", "ninos", "ansiedad", "seguimiento"]
+    role: "Odontología familiar",
+    bio: "Niños, adolescentes, ansiedad dental, seguimiento familiar y consultas suaves.",
+    keywords: ["hijo", "hija", "niño", "niña", "nino", "nina", "ansiedad", "miedo", "familia", "adolescente"]
   }
 ];
 
-const questions = [
+const reviews = [
   {
-    label: "01 / 04",
-    text: "¿Qué describe mejor tu motivo de consulta?",
-    options: [
-      { label: "Revision, limpieza o molestia leve", scores: { valeria: 3, sofia: 1 } },
-      { label: "Quiero mejorar mi sonrisa", scores: { ines: 3, valeria: 1 } },
-      { label: "Dolor, fractura o restauracion", scores: { camila: 3, valeria: 1 } },
-      { label: "Consulta para mi familia o ansiedad dental", scores: { sofia: 3, valeria: 1 } }
-    ]
+    name: "Mariana L.",
+    meta: "Diagnóstico inicial",
+    text: "Llegué sin saber con quién agendar. El asistente me llevó directo a la consulta correcta."
   },
   {
-    label: "02 / 04",
-    text: "¿Qué tan pronto te gustaría ser atendido?",
-    options: [
-      { label: "Lo antes posible", scores: { camila: 2, valeria: 1 } },
-      { label: "Esta semana", scores: { valeria: 2, sofia: 1 } },
-      { label: "Puedo esperar unos dias", scores: { ines: 1, sofia: 1 } },
-      { label: "Solo quiero orientacion inicial", scores: { valeria: 2 } }
-    ]
+    name: "Rocío G.",
+    meta: "Estética dental",
+    text: "El espacio se siente privado, limpio y cero intimidante. Todo fue puntual y muy bien explicado."
   },
   {
-    label: "03 / 04",
-    text: "¿Qué resultado te importa más en esta visita?",
-    options: [
-      { label: "Entender qué tengo y prevenir", scores: { valeria: 3 } },
-      { label: "Verme mejor sin perder naturalidad", scores: { ines: 3 } },
-      { label: "Recuperar funcion y comodidad", scores: { camila: 3 } },
-      { label: "Sentirme en confianza durante la cita", scores: { sofia: 3 } }
-    ]
-  },
-  {
-    label: "04 / 04",
-    text: "¿Quién asistirá a la consulta?",
-    options: [
-      { label: "Yo", scores: { valeria: 1, ines: 1, camila: 1 } },
-      { label: "Un adulto mayor", scores: { camila: 2, valeria: 1 } },
-      { label: "Un niño o adolescente", scores: { sofia: 3 } },
-      { label: "Aun no estoy seguro", scores: { valeria: 2 } }
-    ]
+    name: "Daniel P.",
+    meta: "Rehabilitación",
+    text: "Me explicaron opciones sin presión. Terminé con un plan que sí entendí y pude decidir tranquilo."
   }
 ];
 
-const state = {
-  step: 0,
-  scores: Object.fromEntries(doctors.map((doctor) => [doctor.id, 0])),
-  history: [],
-  selectedDoctor: doctors[0]
-};
+const doctorMap = Object.fromEntries(doctors.map((doctor) => [doctor.id, doctor]));
+const siteHeader = document.querySelector("#siteHeader");
+const menuToggle = document.querySelector("#menuToggle");
+const mainNav = document.querySelector("#mainNav");
+const heroPhoto = document.querySelector(".hero-photo");
+const heroInner = document.querySelector("#heroInner");
+const thread = document.querySelector("#thread");
+const chipRow = document.querySelector("#chipRow");
+const assistantInput = document.querySelector("#assistantInput");
+const sendBtn = document.querySelector("#sendBtn");
+const doctorTrack = document.querySelector("#doctorTrack");
+const reviewGrid = document.querySelector("#reviewGrid");
+const modalOverlay = document.querySelector("#modalOverlay");
+const modalClose = document.querySelector("#modalClose");
+const modalContent = document.querySelector("#modalContent");
 
-const optionsEl = document.querySelector("#triage-options");
-const questionEl = document.querySelector("#triage-question");
-const stepEl = document.querySelector("#triage-step");
-const backButton = document.querySelector("#triage-back");
-const resetButton = document.querySelector("#triage-reset");
-const resultEl = document.querySelector("#triage-result");
-const resultDoctorEl = document.querySelector("#result-doctor");
-const resultCopyEl = document.querySelector("#result-copy");
-const doctorGridEl = document.querySelector("#doctor-grid");
-const doctorSelectEl = document.querySelector("#doctor-select");
-const bookingForm = document.querySelector("#booking-form");
-const formNote = document.querySelector("#form-note");
+let bookingState = {};
 
 function renderDoctors() {
-  doctorGridEl.innerHTML = doctors
+  const cards = doctors
     .map(
-      (doctor) => `
+      (doctor, index) => `
         <article class="doctor-card">
-          <div class="doctor-portrait"><span>${doctor.initials}</span></div>
-          <div class="doctor-meta">${doctor.specialty}</div>
-          <h3>${doctor.name}</h3>
-          <p>${doctor.summary}</p>
-          <p><strong>Agenda:</strong> ${doctor.availability}</p>
-          <button class="ghost-button" type="button" data-doctor="${doctor.id}">Elegir doctora</button>
+          <div class="doctor-art"><span>${doctor.initials}</span></div>
+          <div class="doctor-body">
+            <span class="doctor-index">0${index + 1}</span>
+            <div class="doctor-name">${doctor.name}</div>
+            <div class="doctor-role">${doctor.role}</div>
+            <p class="doctor-bio">${doctor.bio}</p>
+            <button class="doctor-cta" type="button" data-open-booking="${doctor.id}">agendar con ella</button>
+          </div>
         </article>
       `
     )
     .join("");
 
-  doctorSelectEl.innerHTML = [
-    '<option value="">Selecciona</option>',
-    ...doctors.map((doctor) => `<option value="${doctor.id}">${doctor.name}</option>`)
-  ].join("");
+  doctorTrack.innerHTML = cards + cards;
 }
 
-function renderQuestion() {
-  const current = questions[state.step];
-  stepEl.textContent = current.label;
-  questionEl.textContent = current.text;
-  resultEl.hidden = true;
-  optionsEl.hidden = false;
-  backButton.disabled = state.step === 0;
-  optionsEl.innerHTML = current.options
-    .map((option, index) => `<button class="option-button" type="button" data-option="${index}">${option.label}</button>`)
+function renderReviews() {
+  reviewGrid.innerHTML = reviews
+    .map(
+      (review) => `
+        <article class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p>${review.text}</p>
+          <span>${review.name} · ${review.meta}</span>
+        </article>
+      `
+    )
     .join("");
 }
 
-function applyScores(scores) {
-  Object.entries(scores).forEach(([id, value]) => {
-    state.scores[id] += value;
+function addLine(text, who) {
+  const line = document.createElement("p");
+  line.className = `line ${who}`;
+  line.textContent = text;
+  thread.appendChild(line);
+  thread.scrollTop = thread.scrollHeight;
+  return line;
+}
+
+function showTyping() {
+  const line = document.createElement("p");
+  line.className = "line bot typing";
+  line.innerHTML = "<span></span><span></span><span></span>";
+  thread.appendChild(line);
+  thread.scrollTop = thread.scrollHeight;
+  return line;
+}
+
+function addSuggestion(doctor) {
+  const line = document.createElement("p");
+  line.className = "line suggestion-line";
+  line.innerHTML = `
+    <strong>${doctor.name}</strong>
+    <span>${doctor.role}</span>
+    <button type="button" data-open-booking="${doctor.id}">agendar →</button>
+  `;
+  thread.appendChild(line);
+  thread.scrollTop = thread.scrollHeight;
+}
+
+function matchDoctor(text) {
+  const normalized = text.toLowerCase();
+  return doctors.find((doctor) => doctor.keywords.some((keyword) => normalized.includes(keyword))) || doctors[0];
+}
+
+function handleTriage(value) {
+  const text = value.trim();
+  if (!text) return;
+
+  addLine(text, "user");
+  assistantInput.value = "";
+  chipRow.style.display = "none";
+  const typing = showTyping();
+
+  window.setTimeout(() => {
+    typing.remove();
+    const doctor = matchDoctor(text);
+    addLine(`Por lo que me cuentas, empezaría con ${doctor.name.replace("Dra. ", "")}: ${doctor.role.toLowerCase()}.`, "bot");
+    addSuggestion(doctor);
+  }, 680);
+}
+
+function nextDays(count) {
+  const names = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  const days = [];
+  const date = new Date();
+
+  while (days.length < count) {
+    date.setDate(date.getDate() + 1);
+    if (date.getDay() !== 0) {
+      days.push({
+        key: date.toISOString().slice(0, 10),
+        label: `${names[date.getDay()]} ${date.getDate()}`
+      });
+    }
+  }
+
+  return days;
+}
+
+function openBooking(doctorId) {
+  const doctor = doctorMap[doctorId] || doctors[0];
+  const days = nextDays(5);
+  const times = ["9:00", "10:30", "12:00", "15:00", "16:30"];
+  bookingState = { doctor, date: "", time: "" };
+
+  modalContent.innerHTML = `
+    <div class="modal-doctor">
+      <div class="modal-avatar">${doctor.initials}</div>
+      <div>
+        <h3 id="modalTitle">${doctor.name}</h3>
+        <p>${doctor.role}</p>
+      </div>
+    </div>
+    <span class="modal-label">elige un día</span>
+    <div class="pill-row">${days.map((day) => `<button class="pill-option" type="button" data-date="${day.label}">${day.label}</button>`).join("")}</div>
+    <span class="modal-label">elige un horario</span>
+    <div class="pill-row">${times.map((time) => `<button class="pill-option" type="button" data-time="${time}">${time}</button>`).join("")}</div>
+    <div class="form-field"><input id="bookName" type="text" placeholder="Nombre completo" /></div>
+    <div class="form-field"><input id="bookEmail" type="email" placeholder="Correo electrónico" /></div>
+    <div class="form-field"><input id="bookPhone" type="tel" placeholder="Teléfono o WhatsApp" /></div>
+    <button class="modal-submit" id="bookSubmit" type="button">confirmar cita</button>
+  `;
+
+  modalContent.querySelectorAll("[data-date]").forEach((button) => {
+    button.addEventListener("click", () => {
+      modalContent.querySelectorAll("[data-date]").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      bookingState.date = button.dataset.date;
+    });
+  });
+
+  modalContent.querySelectorAll("[data-time]").forEach((button) => {
+    button.addEventListener("click", () => {
+      modalContent.querySelectorAll("[data-time]").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      bookingState.time = button.dataset.time;
+    });
+  });
+
+  document.querySelector("#bookSubmit").addEventListener("click", submitBooking);
+  modalOverlay.classList.add("open");
+  modalOverlay.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeBooking() {
+  modalOverlay.classList.remove("open");
+  modalOverlay.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+function shake(selector) {
+  modalContent.querySelectorAll(selector).forEach((element) => {
+    element.animate(
+      [
+        { transform: "translateX(0)" },
+        { transform: "translateX(-5px)" },
+        { transform: "translateX(5px)" },
+        { transform: "translateX(0)" }
+      ],
+      { duration: 220 }
+    );
   });
 }
 
-function showResult() {
-  const winner = doctors.reduce((best, doctor) => {
-    return state.scores[doctor.id] > state.scores[best.id] ? doctor : best;
-  }, doctors[0]);
+function submitBooking() {
+  const name = document.querySelector("#bookName").value.trim();
+  const email = document.querySelector("#bookEmail").value.trim();
 
-  state.selectedDoctor = winner;
-  doctorSelectEl.value = winner.id;
-  resultDoctorEl.textContent = winner.name;
-  resultCopyEl.textContent = `${winner.specialty}. ${winner.summary}`;
-  optionsEl.hidden = true;
-  resultEl.hidden = false;
-  stepEl.textContent = "Listo";
-  questionEl.textContent = "Con base en tus respuestas, esta es la mejor ruta inicial.";
-}
-
-function resetTriage() {
-  state.step = 0;
-  state.scores = Object.fromEntries(doctors.map((doctor) => [doctor.id, 0]));
-  state.history = [];
-  state.selectedDoctor = doctors[0];
-  renderQuestion();
-}
-
-optionsEl.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-option]");
-  if (!button) return;
-
-  const option = questions[state.step].options[Number(button.dataset.option)];
-  state.history[state.step] = option.scores;
-  applyScores(option.scores);
-
-  if (state.step === questions.length - 1) {
-    showResult();
+  if (!bookingState.date || !bookingState.time) {
+    shake(".pill-row");
     return;
   }
 
-  state.step += 1;
-  renderQuestion();
+  if (!name || !email) {
+    shake(".form-field input");
+    return;
+  }
+
+  modalContent.innerHTML = `
+    <div class="confirm-state">
+      <div class="confirm-icon">✓</div>
+      <h3>Cita solicitada</h3>
+      <p>Te enviaremos la confirmación a ${email}. La doctora recibirá tu solicitud antes de tu llegada.</p>
+      <div class="confirm-detail">
+        <div><span>doctora</span><strong>${bookingState.doctor.name}</strong></div>
+        <div><span>día</span><strong>${bookingState.date}</strong></div>
+        <div><span>hora</span><strong>${bookingState.time}</strong></div>
+      </div>
+      <button class="btn btn-outline" type="button" onclick="closeBooking()">listo</button>
+    </div>
+  `;
+}
+
+window.addEventListener("scroll", () => {
+  const y = window.scrollY;
+  const factor = Math.min(y / window.innerHeight, 1);
+  siteHeader.classList.toggle("scrolled", y > 30);
+  heroPhoto.style.transform = `translateY(${y * 0.12}px) scale(${1 + factor * 0.03})`;
+  heroInner.style.transform = `translateY(${factor * 34}px)`;
+  heroInner.style.opacity = `${1 - factor * 0.72}`;
 });
 
-backButton.addEventListener("click", () => {
-  if (state.step === 0) return;
-  state.step -= 1;
-  state.history = state.history.slice(0, state.step);
-  state.scores = Object.fromEntries(doctors.map((doctor) => [doctor.id, 0]));
-  state.history.forEach(applyScores);
-  renderQuestion();
+menuToggle.addEventListener("click", () => {
+  menuToggle.classList.toggle("open");
+  mainNav.classList.toggle("open");
 });
 
-resetButton.addEventListener("click", resetTriage);
-
-doctorGridEl.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-doctor]");
-  if (!button) return;
-
-  doctorSelectEl.value = button.dataset.doctor;
-  document.querySelector("#agenda").scrollIntoView({ behavior: "smooth" });
+mainNav.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    menuToggle.classList.remove("open");
+    mainNav.classList.remove("open");
+  });
 });
 
-bookingForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(bookingForm);
-  const doctor = doctors.find((item) => item.id === data.get("doctor"));
-  const name = data.get("name");
-  formNote.textContent = `Gracias, ${name}. Preparamos tu solicitud con ${doctor.name}; el consultorio te contactara para confirmar.`;
-  bookingForm.reset();
+sendBtn.addEventListener("click", () => handleTriage(assistantInput.value));
+assistantInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") handleTriage(assistantInput.value);
 });
+
+chipRow.querySelectorAll(".chip").forEach((chip) => {
+  chip.addEventListener("click", () => handleTriage(chip.dataset.msg));
+});
+
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-open-booking]");
+  if (!trigger) return;
+  openBooking(trigger.dataset.openBooking);
+});
+
+modalClose.addEventListener("click", closeBooking);
+modalOverlay.addEventListener("click", (event) => {
+  if (event.target === modalOverlay) closeBooking();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeBooking();
+});
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) entry.target.classList.add("in");
+    });
+  },
+  { threshold: 0.16 }
+);
+
+document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
 
 renderDoctors();
-renderQuestion();
+renderReviews();
