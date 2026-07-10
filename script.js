@@ -290,8 +290,8 @@ function onScroll() {
 
   if (reviewStack) {
     const rect = reviewStack.getBoundingClientRect();
-    const offset = (rect.top - window.innerHeight * 0.5) * -0.08;
-    reviewStack.style.transform = `translateY(${Math.max(-34, Math.min(34, offset))}px)`;
+    const offset = (rect.top - window.innerHeight * 0.72) * -0.045;
+    reviewStack.style.transform = `translateY(${Math.max(-14, Math.min(42, offset + 24))}px)`;
   }
 }
 
