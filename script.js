@@ -298,21 +298,27 @@ async function submitBooking() {
     if (!response.ok || !data.ok) {
       throw new Error(data.error || "No pudimos enviar la confirmacion");
     }
+
+    bookingState.confirmation = data;
   } catch (error) {
     setSubmitState(false);
     modalContent.querySelector(".form-error")?.remove();
-    modalContent.insertAdjacentHTML(
-      "beforeend",
-      `<p class="form-error">No pudimos enviar la confirmación automática. Intenta de nuevo o escríbenos por WhatsApp.</p>`
-    );
+    const errorMessage = document.createElement("p");
+    errorMessage.className = "form-error";
+    errorMessage.textContent = error.message;
+    modalContent.append(errorMessage);
     return;
   }
+
+  const confirmationNote = bookingState.confirmation?.sent?.includes("correo_paciente")
+    ? `Te enviamos la confirmación a ${email}.`
+    : "Recibimos tu solicitud y te contactaremos para confirmar disponibilidad.";
 
   modalContent.innerHTML = `
     <div class="confirm-state">
       <div class="confirm-icon">✓</div>
       <h3>Cita solicitada</h3>
-      <p>Te enviaremos la confirmación a ${email}. La doctora recibirá tu solicitud antes de tu llegada.</p>
+      <p>${confirmationNote} La doctora recibirá tu solicitud antes de tu llegada.</p>
       <div class="confirm-detail">
         <div><span>doctora</span><strong>${bookingState.doctor.name}</strong></div>
         <div><span>día</span><strong>${bookingState.date}</strong></div>

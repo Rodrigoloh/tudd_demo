@@ -35,7 +35,7 @@ async function sendWhatsApp(to, message) {
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
   if (!token || !phoneNumberId || !to) {
-    return { skipped: true };
+    return { channel: "whatsapp", skipped: true };
   }
 
   const response = await fetch(`https://graph.facebook.com/v20.0/${phoneNumberId}/messages`, {
@@ -61,7 +61,7 @@ async function sendWhatsApp(to, message) {
     throw new Error(data?.error?.message || "No se pudo enviar WhatsApp");
   }
 
-  return data;
+  return { channel: "whatsapp", skipped: false, data };
 }
 
 async function sendEmail(booking) {
@@ -69,7 +69,7 @@ async function sendEmail(booking) {
   const from = process.env.MAIL_FROM;
 
   if (!apiKey || !from || !booking.email) {
-    return { skipped: true };
+    return { channel: "email", skipped: true };
   }
 
   const subject = "Solicitud de cita recibida en tüdd";
@@ -106,7 +106,7 @@ async function sendEmail(booking) {
     throw new Error(data?.message || "No se pudo enviar correo");
   }
 
-  return data;
+  return { channel: "email", skipped: false, data };
 }
 
 module.exports = async function handler(request, response) {
@@ -115,13 +115,6 @@ module.exports = async function handler(request, response) {
   }
 
   try {
-    if (!process.env.WHATSAPP_TOKEN || !process.env.WHATSAPP_PHONE_NUMBER_ID) {
-      return sendJson(response, 503, {
-        ok: false,
-        error: "Faltan variables de entorno de WhatsApp en Vercel"
-      });
-    }
-
     const booking = typeof request.body === "string" ? JSON.parse(request.body) : request.body || {};
     const required = ["doctor", "role", "date", "time", "name", "email", "phone"];
     const missing = required.filter((field) => !String(booking[field] || "").trim());
@@ -149,21 +142,44 @@ module.exports = async function handler(request, response) {
       `Hora: ${booking.time}`
     ].join("\n");
 
-    const results = await Promise.allSettled([
-      sendWhatsApp(patientPhone, patientMessage),
-      sendWhatsApp(CLINIC_WHATSAPP, clinicMessage),
-      sendEmail({ ...booking, phone: patientPhone })
-    ]);
+    const jobs = [
+      ["whatsapp_paciente", sendWhatsApp(patientPhone, patientMessage)],
+      ["whatsapp_consultorio", sendWhatsApp(CLINIC_WHATSAPP, clinicMessage)],
+      ["correo_paciente", sendEmail({ ...booking, phone: patientPhone })]
+    ];
 
+    const settled = await Promise.allSettled(jobs.map((job) => job[1]));
+    const results = settled.map((result, index) => ({
+      name: jobs[index][0],
+      status: result.status,
+      value: result.status === "fulfilled" ? result.value : null,
+      error: result.status === "rejected" ? result.reason.message : null
+    }));
+
+    const sent = results.filter((result) => result.status === "fulfilled" && !result.value?.skipped);
+    const skipped = results
+      .filter((result) => result.status === "fulfilled" && result.value?.skipped)
+      .map((result) => result.name);
     const errors = results
       .filter((result) => result.status === "rejected")
-      .map((result) => result.reason.message);
+      .map((result) => `${result.name}: ${result.error}`);
 
-    if (errors.length) {
-      return sendJson(response, 502, { ok: false, error: errors.join(" | ") });
+    if (!sent.length) {
+      return sendJson(response, 502, {
+        ok: false,
+        error: errors.length
+          ? errors.join(" | ")
+          : "No hay canales de confirmacion configurados en Vercel",
+        skipped
+      });
     }
 
-    return sendJson(response, 200, { ok: true });
+    return sendJson(response, 200, {
+      ok: true,
+      sent: sent.map((result) => result.name),
+      skipped,
+      warnings: errors
+    });
   } catch (error) {
     return sendJson(response, 500, { ok: false, error: error.message || "Error inesperado" });
   }
