@@ -671,6 +671,18 @@ section:not(.hero) {
   background: var(--terra-deep);
 }
 
+.modal-submit:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.form-error {
+  margin: 14px 0 0;
+  color: var(--terra-deep);
+  font-size: 13px;
+  font-weight: 650;
+}
+
 .trust {
   position: relative;
   min-height: 96svh;

@@ -250,17 +250,61 @@ function shake(selector) {
   });
 }
 
-function submitBooking() {
+function setSubmitState(isLoading) {
+  const button = document.querySelector("#bookSubmit");
+  if (!button) return;
+  button.disabled = isLoading;
+  button.textContent = isLoading ? "enviando..." : "confirmar cita";
+}
+
+async function submitBooking() {
   const name = document.querySelector("#bookName").value.trim();
   const email = document.querySelector("#bookEmail").value.trim();
+  const phone = document.querySelector("#bookPhone").value.trim();
 
   if (!bookingState.date || !bookingState.time) {
     shake(".pill-row");
     return;
   }
 
-  if (!name || !email) {
+  if (!name || !email || !phone) {
     shake(".form-field input");
+    return;
+  }
+
+  setSubmitState(true);
+
+  const payload = {
+    doctor: bookingState.doctor.name,
+    role: bookingState.doctor.role,
+    date: bookingState.date,
+    time: bookingState.time,
+    name,
+    email,
+    phone
+  };
+
+  try {
+    modalContent.querySelector(".form-error")?.remove();
+    const response = await fetch("/api/book", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "No pudimos enviar la confirmacion");
+    }
+  } catch (error) {
+    setSubmitState(false);
+    modalContent.querySelector(".form-error")?.remove();
+    modalContent.insertAdjacentHTML(
+      "beforeend",
+      `<p class="form-error">No pudimos enviar la confirmación automática. Intenta de nuevo o escríbenos por WhatsApp.</p>`
+    );
     return;
   }
 
@@ -344,3 +388,4 @@ window.setInterval(() => {
   activeReview = (activeReview + 1) % reviews.length;
   renderReviews();
 }, 4200);
+
