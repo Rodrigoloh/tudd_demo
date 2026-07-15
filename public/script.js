@@ -59,11 +59,40 @@ const reviews = [
   }
 ];
 
+const services = [
+  {
+    title: "Ortodoncia",
+    description: "Alineadores, brackets estéticos y seguimiento de mordida con planeación clara.",
+    meta: "01 / Diagnóstico y plan"
+  },
+  {
+    title: "Diseño de sonrisa",
+    description: "Blanqueamiento, resinas y carillas pensadas para verse naturales desde cerca.",
+    meta: "02 / Estética conservadora"
+  },
+  {
+    title: "Endodoncia",
+    description: "Atención precisa para dolor, sensibilidad profunda y tratamientos de conducto.",
+    meta: "03 / Alivio y precisión"
+  },
+  {
+    title: "Odontopediatría",
+    description: "Primeras visitas, prevención y tratamiento infantil con una experiencia tranquila.",
+    meta: "04 / Cuidado infantil"
+  }
+];
+
 const doctorMap = Object.fromEntries(doctors.map((doctor) => [doctor.id, doctor]));
 const siteHeader = document.querySelector("#siteHeader");
 const menuToggle = document.querySelector("#menuToggle");
 const mainNav = document.querySelector("#mainNav");
 const heroPhoto = document.querySelector(".hero-photo");
+const serviceSlider = document.querySelector("[data-service-slider]");
+const serviceTitle = document.querySelector("#serviceTitle");
+const serviceDescription = document.querySelector("#serviceDescription");
+const serviceMeta = document.querySelector("#serviceMeta");
+const serviceOptions = document.querySelectorAll("[data-service-index]");
+const serviceSlides = document.querySelectorAll(".service-slide");
 const assistantInput = document.querySelector("#assistantInput");
 const assistantResponse = document.querySelector("#assistantResponse");
 const sendBtn = document.querySelector("#sendBtn");
@@ -76,6 +105,31 @@ const reviewStack = document.querySelector("[data-parallax-reviews]");
 
 let bookingState = {};
 let activeReview = 0;
+
+function setActiveService(index) {
+  const service = services[index] || services[0];
+  serviceSlider?.setAttribute("data-active-service", String(index));
+  if (serviceTitle) serviceTitle.textContent = service.title;
+  if (serviceDescription) serviceDescription.textContent = service.description;
+  if (serviceMeta) serviceMeta.textContent = service.meta;
+
+  serviceOptions.forEach((option) => {
+    const isActive = Number(option.dataset.serviceIndex) === index;
+    option.classList.toggle("active", isActive);
+    option.setAttribute("aria-selected", String(isActive));
+  });
+
+  serviceSlides.forEach((slide, slideIndex) => {
+    slide.classList.toggle("active", slideIndex === index);
+  });
+}
+
+serviceOptions.forEach((option) => {
+  const activate = () => setActiveService(Number(option.dataset.serviceIndex));
+  option.addEventListener("mouseenter", activate);
+  option.addEventListener("focus", activate);
+  option.addEventListener("click", activate);
+});
 
 function renderDoctors() {
   doctorTrack.innerHTML = `
@@ -387,6 +441,7 @@ const observer = new IntersectionObserver(
 
 document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
 
+setActiveService(0);
 renderDoctors();
 renderReviews();
 

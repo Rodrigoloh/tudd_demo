@@ -21,7 +21,7 @@
       <div class="wrap nav-wrap">
         <a class="logo" href="#inicio" aria-label="Clinica Dental Oris inicio">Clinica Dental Oris</a>
         <nav class="main-nav" id="mainNav" aria-label="Navegacion principal">
-          <a href="#consultorio">Consultorio</a>
+          <a href="#consultorio">Servicios</a>
           <a href="#nosotros">Nosotros</a>
           <a href="#contacto">Contacto</a>
           <a class="header-pill header-pill-emergency" href="https://wa.me/528182085411?text=Hola%2C%20tengo%20una%20emergencia%20dental" target="_blank" rel="noreferrer">Emergencia</a>
@@ -61,25 +61,44 @@
         <div class="scroll-cue"><span></span>conoce Clinica Dental Oris</div>
       </section>
 
-      <section class="about" id="consultorio">
-        <div class="about-grid">
-          <div class="about-copy reveal">
-            <span class="eyebrow">consultorio</span>
-            <h2>Cuidado dental con calma, criterio y una agenda bien resuelta.</h2>
-            <p class="quote">
-              Cuatro especialistas, cuatro maneras de atender, un mismo estándar de cuidado.
-              Primero se escucha, después se diagnostica.
-            </p>
+      <section class="services" id="consultorio" data-service-slider>
+        <div class="services-shell">
+          <div class="services-copy">
+            <span class="eyebrow">servicios</span>
+            <h2 id="serviceTitle" aria-live="polite">Ortodoncia</h2>
+            <div class="services-caption">
+              <p id="serviceDescription">Alineadores, brackets estéticos y seguimiento de mordida con planeación clara.</p>
+              <span id="serviceMeta">01 / Diagnóstico y plan</span>
+            </div>
+            <div class="service-list" role="tablist" aria-label="Servicios dentales">
+              <button class="service-option active" type="button" role="tab" aria-selected="true" data-service-index="0">
+                <span>01</span>Ortodoncia
+              </button>
+              <button class="service-option" type="button" role="tab" aria-selected="false" data-service-index="1">
+                <span>02</span>Diseño de sonrisa
+              </button>
+              <button class="service-option" type="button" role="tab" aria-selected="false" data-service-index="2">
+                <span>03</span>Endodoncia
+              </button>
+              <button class="service-option" type="button" role="tab" aria-selected="false" data-service-index="3">
+                <span>04</span>Odontopediatría
+              </button>
+            </div>
           </div>
-          <div class="about-media reveal">
-            <img src="public/assets/tudd-clinic.png" alt="Recepcion minimal del consultorio dental Clinica Dental Oris" />
+          <div class="services-gallery" aria-live="polite">
+            <figure class="service-slide active">
+              <img src="public/assets/service-ortodoncia.png" alt="Alineadores y modelo dental para ortodoncia" />
+            </figure>
+            <figure class="service-slide">
+              <img src="public/assets/service-diseno-sonrisa.png" alt="Consulta de diseño de sonrisa y blanqueamiento" />
+            </figure>
+            <figure class="service-slide">
+              <img src="public/assets/service-endodoncia.png" alt="Equipo de endodoncia en consultorio dental premium" />
+            </figure>
+            <figure class="service-slide">
+              <img src="public/assets/service-odontopediatria.png" alt="Odontopediatría con paciente infantil en consulta tranquila" />
+            </figure>
           </div>
-        </div>
-        <div class="stats-banner" aria-label="Datos del consultorio">
-          <div><strong>20 min</strong><span>Orientación inicial</span></div>
-          <div><strong>4.9</strong><span>Calificación promedio</span></div>
-          <div><strong>4</strong><span>Consultorios</span></div>
-          <div><strong>1</strong><span>Espacio en común</span></div>
         </div>
       </section>
 
@@ -166,7 +185,7 @@
         </div>
         <div>
           <h3>Navegación</h3>
-          <a href="#consultorio">Consultorio</a>
+          <a href="#consultorio">Servicios</a>
           <a href="#nosotros">Nosotros</a>
           <a href="#confianza">Reseñas</a>
           <a href="#contacto">Contacto</a>
