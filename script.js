@@ -10,11 +10,11 @@ const doctors = [
     keywords: ["ortodoncia", "bracket", "brackets", "alineador", "alinear", "mordida", "chueco", "chuecos", "invisalign"]
   },
   {
-    id: "camila",
-    name: "Dra. Camila Rousseau",
+    id: "carlos",
+    name: "Dr. Carlos Rousseau",
     initials: "CR",
     role: "Estética dental",
-    site: "camila.html",
+    site: "carlos.html",
     bio: "Diseño de sonrisa, blanqueamiento, resinas y carillas con enfoque conservador.",
     position: "37.5%",
     keywords: ["estetica", "estética", "blanque", "carilla", "resina", "sonrisa", "mancha", "color", "amarillo"]
@@ -80,7 +80,7 @@ let activeReview = 0;
 function renderDoctors() {
   doctorTrack.innerHTML = `
     <div class="team-stage" data-active="">
-      <img class="team-sheet" src="public/assets/tudd-doctors-sheet.png" alt="Equipo clínico tüdd" />
+      <img class="team-sheet" src="public/assets/tudd-doctors-sheet.png" alt="Equipo clínico Clinica Dental Oris" />
       ${doctors
         .map(
           (doctor, index) => `
@@ -101,7 +101,7 @@ function renderDoctors() {
         .map(
           (doctor) => `
             <a class="team-name" href="${doctor.site}" data-doctor-name="${doctor.id}">
-              <span>${doctor.name.replace("Dra. ", "")}</span>
+              <span>${doctor.name.replace(/^Dr(a)?\\.\\s/, "")}</span>
               <small>${doctor.role}</small>
             </a>
           `
@@ -318,9 +318,9 @@ async function submitBooking() {
     <div class="confirm-state">
       <div class="confirm-icon">✓</div>
       <h3>Cita solicitada</h3>
-      <p>${confirmationNote} La doctora recibirá tu solicitud antes de tu llegada.</p>
+      <p>${confirmationNote} Tu especialista recibirá la solicitud antes de tu llegada.</p>
       <div class="confirm-detail">
-        <div><span>doctora</span><strong>${bookingState.doctor.name}</strong></div>
+        <div><span>especialista</span><strong>${bookingState.doctor.name}</strong></div>
         <div><span>día</span><strong>${bookingState.date}</strong></div>
         <div><span>hora</span><strong>${bookingState.time}</strong></div>
       </div>
