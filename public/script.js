@@ -61,7 +61,7 @@ const reviews = [
 
 const serviceSlidesData = [
   {
-    name: "Ortodoncia",
+    name: "Brackets",
     color: "#6B5B50",
     image: "assets/service-ortodoncia.png",
     description: "Alineadores, brackets estéticos y seguimiento de mordida con planeación clara.",
@@ -75,14 +75,14 @@ const serviceSlidesData = [
     location: "02 / Estética conservadora"
   },
   {
-    name: "Endodoncia",
+    name: "Raíces",
     color: "#4E676F",
     image: "assets/service-endodoncia.png",
     description: "Atención precisa para dolor, sensibilidad profunda y tratamientos de conducto.",
     location: "03 / Alivio y precisión"
   },
   {
-    name: "Pediatría",
+    name: "Niños",
     color: "#8BA08A",
     image: "assets/service-odontopediatria.png",
     description: "Primeras visitas, prevención y tratamiento infantil con una experiencia tranquila.",

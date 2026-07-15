@@ -855,14 +855,13 @@ section:not(.hero) {
 
 .doctors {
   overflow: hidden;
-  background:
-    linear-gradient(180deg, var(--ink) 0%, var(--ink) 22%, rgba(46, 35, 24, 0.96) 42%, rgba(46, 35, 24, 0.84) 100%);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--ink);
   padding-bottom: 0 !important;
 }
 
 .doctors .eyebrow {
-  color: #e4a876;
+  color: var(--terra-deep);
 }
 
 .doctors-head {
@@ -885,16 +884,16 @@ section:not(.hero) {
   min-height: clamp(420px, 48vw, 720px);
   border-radius: 0;
   background:
-    linear-gradient(180deg, var(--ink) 0%, rgba(46, 35, 24, 0.72) 18%, rgba(184, 83, 47, 0.14) 100%),
-    radial-gradient(circle at 20% 18%, rgba(251, 245, 234, 0.24), transparent 34%),
-    radial-gradient(circle at 78% 22%, rgba(184, 83, 47, 0.18), transparent 32%);
+    linear-gradient(180deg, var(--cream) 0%, var(--sand) 58%, rgba(234, 217, 191, 0.9) 100%),
+    radial-gradient(circle at 20% 18%, rgba(184, 83, 47, 0.12), transparent 34%),
+    radial-gradient(circle at 78% 22%, rgba(46, 35, 24, 0.08), transparent 32%);
 }
 
 .team-stage::before {
   content: "";
   position: absolute;
   inset: 9% 2% 0;
-  border-top: 1px solid rgba(251, 245, 234, 0.1);
+  border-top: 1px solid var(--line);
   pointer-events: none;
 }
 
@@ -927,7 +926,7 @@ section:not(.hero) {
 
 .team-dim {
   z-index: 2;
-  background: rgba(46, 35, 24, 0.36);
+  background: rgba(251, 245, 234, 0.52);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
@@ -941,7 +940,7 @@ section:not(.hero) {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
-  border-top: 1px solid rgba(251, 245, 234, 0.12);
+  border-top: 1px solid var(--line);
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
   padding: 22px 0 64px;
@@ -950,7 +949,7 @@ section:not(.hero) {
 .team-name {
   display: grid;
   gap: 5px;
-  color: rgba(251, 245, 234, 0.48);
+  color: rgba(46, 35, 24, 0.52);
   transition: color 0.25s ease, opacity 0.25s ease, transform 0.25s var(--ease);
 }
 
@@ -961,7 +960,7 @@ section:not(.hero) {
 }
 
 .team-name small {
-  color: rgba(251, 245, 234, 0.42);
+  color: rgba(46, 35, 24, 0.44);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -970,13 +969,13 @@ section:not(.hero) {
 
 .team-name:hover,
 .team-name.active {
-  color: var(--cream);
+  color: var(--ink);
   transform: translateY(-2px);
 }
 
 .team-name:hover small,
 .team-name.active small {
-  color: #e4a876;
+  color: var(--terra-deep);
 }
 
 .modal-submit {
